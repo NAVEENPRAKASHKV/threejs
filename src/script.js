@@ -5,30 +5,28 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 // initialize the scene
 const scene = new THREE.Scene();
 // Adding axes helper
-const axesHelper = new THREE.AxesHelper(3);
-scene.add(axesHelper);
+// const axesHelper = new THREE.AxesHelper(3);
+// scene.add(axesHelper);
 // creating the group
 const group = new THREE.Group();
 
 // add objects to the scene
-const cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
+const vertex = new Float32Array([0, 0, 0, 0, 2, 0, 2, 0, 0]);
+const bufferAttribute = new THREE.BufferAttribute(vertex, 3);
+const geometry = new THREE.BufferGeometry();
+geometry.setAttribute("position", bufferAttribute);
+
 const cubeMaterial = new THREE.MeshBasicMaterial({
   color: "red",
   wireframe: true,
 });
-const cubeMesh = new THREE.Mesh(cubeGeometry, cubeMaterial);
+const cubeMesh = new THREE.Mesh(geometry, cubeMaterial);
 
 // scaling size of the cube
 // cubeMesh.scale.set(3, 3, 1);
 
 // creating more curbe
-const cubeMesh_2 = new THREE.Mesh(cubeGeometry, cubeMaterial);
-cubeMesh_2.position.x = 3;
-
-const cubeMesh_3 = new THREE.Mesh(cubeGeometry, cubeMaterial);
-cubeMesh_3.position.y = 2;
-group.add(cubeMesh, cubeMesh_2, cubeMesh_3);
-scene.add(group);
+scene.add(cubeMesh);
 
 // initialize the camera
 const camera = new THREE.PerspectiveCamera(
@@ -62,12 +60,15 @@ window.addEventListener("resize", () => {
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
+const clock = new THREE.Clock();
+let prevTime = 0;
 
 // animation
 function animation() {
-  cubeMesh.rotation.x += 0.005;
-  cubeMesh_2.rotation.y += 0.005;
-  cubeMesh_3.rotation.z += 0.005;
+  // const curretTime = clock.getDelta();
+  // const delta = curretTime - prevTime;
+  // cubeMesh.rotation.x += delta;
+
   controls.update();
   renderer.render(scene, camera);
   window.requestAnimationFrame(animation);
