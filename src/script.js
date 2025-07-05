@@ -5,22 +5,36 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 // initialize the scene
 const scene = new THREE.Scene();
 // Adding axes helper
-// const axesHelper = new THREE.AxesHelper(3);
-// scene.add(axesHelper);
+const axesHelper = new THREE.AxesHelper(3);
+scene.add(axesHelper);
 // creating the group
-const group = new THREE.Group();
+// const group = new THREE.Group();
 
 // add objects to the scene
-const vertex = new Float32Array([0, 0, 0, 0, 2, 0, 2, 0, 0]);
-const bufferAttribute = new THREE.BufferAttribute(vertex, 3);
-const geometry = new THREE.BufferGeometry();
-geometry.setAttribute("position", bufferAttribute);
+// buffer geometry
+// const vertex = new Float32Array([0, 0, 0, 0, 2, 0, 2, 0, 0]);
+// const bufferAttribute = new THREE.BufferAttribute(vertex, 3);
+// const geometry = new THREE.BufferGeometry();
+// geometry.setAttribute("position", bufferAttribute);
+
+const cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
 
 const cubeMaterial = new THREE.MeshBasicMaterial({
   color: "red",
-  wireframe: true,
 });
-const cubeMesh = new THREE.Mesh(geometry, cubeMaterial);
+const cubeMesh = new THREE.Mesh(cubeGeometry, cubeMaterial);
+cubeMaterial.transparent = true;
+cubeMaterial.opacity = 0.5;
+// creating second object
+
+const planeGeometry = new THREE.PlaneGeometry(1, 1);
+const planeMaterial = new THREE.MeshBasicMaterial({
+  color: "blue",
+  side: THREE.DoubleSide,
+});
+const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
+scene.add(planeMesh);
+planeMesh.position.z = 2;
 
 // scaling size of the cube
 // cubeMesh.scale.set(3, 3, 1);
@@ -60,15 +74,10 @@ window.addEventListener("resize", () => {
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
-const clock = new THREE.Clock();
-let prevTime = 0;
 
-// animation
 function animation() {
-  // const curretTime = clock.getDelta();
-  // const delta = curretTime - prevTime;
-  // cubeMesh.rotation.x += delta;
-
+  planeGeometry.rotateZ(0.01);
+  cubeGeometry.rotateX(0.01);
   controls.update();
   renderer.render(scene, camera);
   window.requestAnimationFrame(animation);
